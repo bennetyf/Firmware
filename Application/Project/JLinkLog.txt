@@ -1,0 +1,65 @@
+
+T2A30 053:842 SEGGER J-Link V6.16c Log File (0001ms, 0004ms total)
+T2A30 053:842 DLL Compiled: Jun 16 2017 18:14:49 (0001ms, 0004ms total)
+T2A30 053:842 Logging started @ 2017-09-06 11:08 (0001ms, 0004ms total)
+T2A30 053:843 JLINK_SetWarnOutHandler(...) (0000ms, 0004ms total)
+T2A30 053:843 JLINK_OpenEx(...)
+  ***** Error: Cannot connect to J-Link via USB.  returns "Cannot connect to J-Link via USB." (0000ms, 0004ms total)
+
+  ***** API Error: API JLINK_GetHardwareVersion function called before JLINKARM_Open()
+T2A30 053:843 
+  ***** Error: Cannot connect to J-Link via USB.JLINK_IsOpen()  returns 0x00 (0000ms, 0005ms total)
+T2A30 058:351 JLINK_EMU_SelectByUSBSN(SerialNo = 0)  returns 0xFFFFFFFF (0001ms, 0006ms total)
+T2A30 058:352 JLINK_EnableLog(...) (0000ms, 0006ms total)
+T2A30 058:352 JLINK_SetWarnOutHandler(...) (0000ms, 0006ms total)
+T2A30 058:352 JLINK_OpenEx(...)
+  ***** Error: Cannot connect to J-Link via USB.  returns "Cannot connect to J-Link via USB." (0000ms, 0006ms total)
+
+  ***** API Error: API JLINK_GetHardwareVersion function called before JLINKARM_Open()
+T2A30 058:352 
+  ***** Error: Cannot connect to J-Link via USB.JLINK_IsOpen()  returns 0x00 (0000ms, 0006ms total)
+T2A30 061:175 JLINK_EMU_SelectByUSBSN(SerialNo = 0)  returns 0xFFFFFFFF (0000ms, 0006ms total)
+T2A30 061:175 JLINK_EnableLog(...) (0000ms, 0006ms total)
+T2A30 061:175 JLINK_SetWarnOutHandler(...) (0000ms, 0006ms total)
+T2A30 061:175 JLINK_OpenEx(...)
+  ***** Error: Cannot connect to J-Link via USB.  returns "Cannot connect to J-Link via USB." (0000ms, 0006ms total)
+
+  ***** API Error: API JLINK_GetHardwareVersion function called before JLINKARM_Open()
+T2A30 061:176 
+  ***** Error: Cannot connect to J-Link via USB.JLINK_IsOpen()  returns 0x00 (0000ms, 0007ms total)
+T2A30 078:774 JLINK_EMU_GetList(InterfaceMask = 0x00000001, MaxInfos = 0x00000010) [0]: USB, S/N: 268006479  returns 0x01 (0002ms, 0009ms total)
+T2A30 078:776 JLINK_IsOpen()  returns 0x00 (0000ms, 0009ms total)
+T2A30 078:776 JLINK_EMU_SelectByUSBSN(SerialNo = 268006479)  returns 0x00 (0000ms, 0009ms total)
+T2A30 078:776 JLINK_EnableLog(...) (0000ms, 0009ms total)
+T2A30 078:776 JLINK_SetWarnOutHandler(...) (0000ms, 0009ms total)
+T2A30 078:776 JLINK_OpenEx(...)
+Firmware: J-Link ARM V8 compiled Nov 28 2014 13:44:46
+Hardware: V8.00
+S/N: 268006479
+OEM: SEGGER-EDU
+Feature(s): FlashBP, GDBWEBSRV Webserver running on local port 19080 (4243ms, 4252ms total)
+T2A30 078:776   returns O.K. (4243ms, 4252ms total)
+T2A30 083:019 JLINK_GetEmuCaps()  returns 0xB9FF7BBF (0000ms, 4252ms total)
+T2A30 083:019 JLINK_TIF_GetAvailable(...) (0001ms, 4253ms total)
+T2A30 083:020 JLINK_SetErrorOutHandler(...) (0000ms, 4253ms total)
+T2A30 083:020 JLINK_ExecCommand("ProjectFile = "D:\Work_Projects\Palette_Projects\Firmware_Version_1_0_201709\JLinkSettings.ini"", ...).   returns 0x00 (0145ms, 4398ms total)
+T2A30 083:165 JLINK_ExecCommand("Device = nRF52832_xxAA", ...). Device "NRF52832_XXAA" selected.  returns 0x00 (0002ms, 4400ms total)
+T2A30 083:167 JLINK_ExecCommand("DisableConnectionTimeout", ...).   returns 0x01 (0000ms, 4400ms total)
+T2A30 083:167 JLINK_GetHardwareVersion()  returns 0x13880 (0000ms, 4400ms total)
+T2A30 083:167 JLINK_GetDLLVersion()  returns 61603 (0000ms, 4400ms total)
+T2A30 083:167 JLINK_GetDLLVersion()  returns 61603 (0000ms, 4400ms total)
+T2A30 083:167 JLINK_GetCompileDateTime() (0000ms, 4400ms total)
+T2A30 083:167 JLINK_GetFirmwareString(...) (0000ms, 4400ms total)
+T2A30 083:167 JLINK_GetHardwareVersion()  returns 0x13880 (0000ms, 4400ms total)
+T2A30 083:167 JLINK_TIF_Select(JLINKARM_TIF_SWD)  returns 0x00 (0001ms, 4401ms total)
+T2A30 083:168 JLINK_SetSpeed(5000) (0000ms, 4401ms total)
+T2A30 083:168 JLINK_SetResetType(JLINKARM_RESET_TYPE_NORMAL)  returns JLINKARM_RESET_TYPE_NORMAL (0000ms, 4401ms total)
+T2A30 083:168 JLINK_Reset() >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x35 TIF> >0x0D TIF> >0x0D TIF> >0x0D TIF> >0x0D TIF> >0x35 TIF> >0x0D TIF> >0x0D TIF> >0x35 TIF> >0x35 TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF>JLINK_GetId() >0x10B TIF>
+ >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x35 TIF> >0x0D TIF> >0x0D TIF> >0x0D TIF> >0x0D TIF> >0x35 TIF> >0x0D TIF> >0x0D TIF> >0x35 TIF> >0x35 TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF>  returns 0x00000000 (0272ms, 5476ms total)
+T2A30 084:243 JLINK_GetId() >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF> >0x35 TIF> >0x0D TIF> >0x0D TIF> >0x0D TIF> >0x0D TIF> >0x35 TIF> >0x0D TIF> >0x0D TIF> >0x35 TIF> >0x35 TIF> >0x10B TIF> >0x10F TIF> >0x10B TIF> >0x10F TIF>  returns 0x00000000 (0269ms, 5745ms total)
+T2A30 084:513 JLINK_GetFirmwareString(...) (0000ms, 5745ms total)
+T2B88 084:513 
+  ***** Error: Connection to emulator lost! (10261ms, 16006ms total)
+T2A30 098:487 JLINK_Close() (0013ms, 5758ms total)
+T2A30 098:487  (0013ms, 5758ms total)
+T2A30 098:487 Closed (0013ms, 5758ms total)

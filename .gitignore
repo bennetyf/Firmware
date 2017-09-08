@@ -1,3 +1,6 @@
+# Build Folder
+Application/Project/_Build/
+
 # Object files
 *.o
 *.ko
