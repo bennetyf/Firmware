@@ -1,4 +1,4 @@
-/** Library Name: "app_board.c"
+/** Library Name: app_board.c
 	*
 	* @Brief This File Implements the Functions Declared in "app_board.h"
 	*
@@ -405,7 +405,7 @@ uint8_t boardButtonDisableAll(void)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /** @Func Function for Initializing On-Board Resources */
-uint8_t boardInit(uint32_t init_type, uint32_t ticks_per_ms, board_event_callback_t callback)
+uint8_t boardConfig(uint32_t init_type, uint32_t ticks_per_ms, board_event_callback_t callback)
 {
 	uint8_t err_code 	= NRF_SUCCESS;
 	

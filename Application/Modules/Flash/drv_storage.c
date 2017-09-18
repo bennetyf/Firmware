@@ -43,7 +43,7 @@ void fdsResetVars(void){
 }
 
 /** @Func Setup an FDS Record */
-bool fdsRecSetup (const uint16_t file_id, const uint16_t rec_key, const uint32_t* const data_array, const uint16_t data_length){
+bool fdsRecConfig (const uint16_t file_id, const uint16_t rec_key, const uint32_t* const data_array, const uint16_t data_length){
 	//Check file_id and rec_key
 	if(file_id > 0xBFFF || rec_key == 0x0000 || rec_key > 0xBFFF){
 		NRF_LOG_INFO("FDS_ERROR : <fdsRecSetup> File ID: 0x%4x or RecordKey: 0x%4x Out of Range!\r\n", file_id, rec_key);

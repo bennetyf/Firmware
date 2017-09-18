@@ -18,7 +18,7 @@
  * @Type		- pwm_run_mode_t															(PWM Running Mode Type)
  * @Type		- pwm_stop_mode_t															(PWM Stom Mode Type)
  *
- * @Func		- pwmSetup																		(Set up the PWM configuration structure)
+ * @Func		- pwmConfig																		(Set up the PWM configuration structure)
  * @Func		- pwmRun																			(Run the PWM sequence on one channel)
  * @Func		- pwmUpdateSeq																(Update the PWM sequence on an existing instance)
  * @Func		-	pwmStop																			(Stop PWM sequence)
@@ -121,7 +121,7 @@ typedef enum
 	* @Para channel 		[char]: 							The selection of one of the RGB channels (must be 'r','g','b',or 'R','G','B')
 	*
 */
-void pwmSetup(const nrf_pwm_clk_t clk, const uint16_t cycle_top, const uint16_t * const seq_data, const uint16_t seq_length, const uint8_t pin, const char channel);
+void pwmConfig(const nrf_pwm_clk_t clk, const uint16_t cycle_top, const uint16_t * const seq_data, const uint16_t seq_length, const uint8_t pin, const char channel);
 
 
 /** @Func Run the Sequence in One Channel

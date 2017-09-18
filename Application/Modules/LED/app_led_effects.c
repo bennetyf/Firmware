@@ -198,9 +198,9 @@ void ledEffectRegister(led_effect_t effect)
 		case LED_EFFECT_FIRST:
 		{
 			// Set up the PWM configuration structures
-			pwmSetup(clk_led_eff_1_r,top_val_led_eff_1_r,seq_data_led_eff_1_r,seq_len_led_eff_1_r,leds_rgb_list[0],'r');
-			pwmSetup(clk_led_eff_1_g,top_val_led_eff_1_g,seq_data_led_eff_1_g,seq_len_led_eff_1_g,leds_rgb_list[1],'g');
-			pwmSetup(clk_led_eff_1_b,top_val_led_eff_1_b,seq_data_led_eff_1_b,seq_len_led_eff_1_b,leds_rgb_list[2],'b');	
+			pwmConfig(clk_led_eff_1_r,top_val_led_eff_1_r,seq_data_led_eff_1_r,seq_len_led_eff_1_r,leds_rgb_list[0],'r');
+			pwmConfig(clk_led_eff_1_g,top_val_led_eff_1_g,seq_data_led_eff_1_g,seq_len_led_eff_1_g,leds_rgb_list[1],'g');
+			pwmConfig(clk_led_eff_1_b,top_val_led_eff_1_b,seq_data_led_eff_1_b,seq_len_led_eff_1_b,leds_rgb_list[2],'b');	
 			
 			// Set the flag to notify that this is a PWM effect
 			is_pwm_effect			 = true;
@@ -215,9 +215,9 @@ void ledEffectRegister(led_effect_t effect)
 		case LED_EFFECT_SECOND:
 		{
 			// Set up the PWM configuration structures
-			pwmSetup(clk_led_eff_2_r,top_val_led_eff_2_r,seq_data_led_eff_2_r,seq_len_led_eff_2_r,leds_rgb_list[0],'r');
-			pwmSetup(clk_led_eff_2_g,top_val_led_eff_2_g,seq_data_led_eff_2_g,seq_len_led_eff_2_g,leds_rgb_list[1],'g');
-			pwmSetup(clk_led_eff_2_b,top_val_led_eff_2_b,seq_data_led_eff_2_b,seq_len_led_eff_2_b,leds_rgb_list[2],'b');
+			pwmConfig(clk_led_eff_2_r,top_val_led_eff_2_r,seq_data_led_eff_2_r,seq_len_led_eff_2_r,leds_rgb_list[0],'r');
+			pwmConfig(clk_led_eff_2_g,top_val_led_eff_2_g,seq_data_led_eff_2_g,seq_len_led_eff_2_g,leds_rgb_list[1],'g');
+			pwmConfig(clk_led_eff_2_b,top_val_led_eff_2_b,seq_data_led_eff_2_b,seq_len_led_eff_2_b,leds_rgb_list[2],'b');
 			
 			// Set the flag to notify that this is a PWM effect
 			is_pwm_effect			 = true;

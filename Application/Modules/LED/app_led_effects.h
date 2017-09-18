@@ -7,55 +7,26 @@
  *
  * @Req 		This library requires the following modules to function
  * @Req 		- PWM Driver Module 											(Configured in sdk_config.h)
- * @Req			- Board IO Interface Definition Module		(Defined in "data_board.h")
+ * @Req			- Board IO Interface Definition Module		(Defined in "board_select.h")
  *
- * @Macro 	This module defines the following macros that can be referenced from outside
- * @Macro 	-	BOARD_INIT_NONE										(Initialize Nothing on the Board)
- * @Macro 	- BOARD_INIT_LEDS										(Initialize All LEDS on the Board)
- * @Macro   - BOARD_INIT_BUTTONS								(Initialize All Buttons on the Board)
- * @Macro   - BOARD_BUTTON_ACTION_PUSH  				(Define Button Short Push Action)
- * @Macro 	- BOARD_BUTTON_ACTION_RELEASE 			(Define Button Release Action)
- * @Macro 	- BOARD_BUTTON_ACTION_LONG_PUSH			(Define Button Long Push Action)
- * @Macro 	- BOARD_BUTTON_TIMER_PRESCALER			(Define Button Timer Prescaler)
- * @Macro		- BOARD_BUTTON_TIMER_OP_QUEUE_SIZE	(Define Button Timer Queue Size)
- * @Macro 	- BOARD_BUTTON_LONG_PUSH_TIMEOUT_MS (Define Button Long Push Time in Milliseconds)
- * @Macro		- BOARD_BUTTON_DETECTION_DELAY_MS		(Define Button Push Action Detection Delay Time in Milliseconds)
- * @Macro 	- BOARD_PIN_TO_IDX									(Define Conversion from the Pin Number on Board to List Index)
- *						(list,length,pin_no,index) 				(The List is Internally Defined in "data_board.h" File)
- * @Macro 	- BOARD_IDX_TO_PIN									(Define Conversion from the List Index to the Pin Number on Board)
- *						(list,length,pin_no,index) 				(The List is Internally Defined in "data_board.h" File)
+ * @Type 		- led_effect_t											(LED Effect Data Type)
  *
- * @Type 		- board_event_t											(Board Event Type Including All Kinds of Board Events)
- * @Type		-	board_button_event_t							(Button Event Type)
- * @Type		-	board_event_callback_t						(Callback Function Type for Board Events)
- * @Type		- board_button_action_t							(Button Action Type)
+ * @Func		- ledEffectFillSeq									(Fill in the PWM sequence of a pre-defined effect)
  *
- * @Func		- boardReadPinState									(Read the State of a Specified Pin)
- * @Func		- boardLedIsOn											(Check Whether the Specified LED is On)
- * @Func		- boardButtonIsPressed							(Check Whether the Specified Button is Pressed)
+ * @Func		- ledEffectRegister									(Register the PWM instance of one channel)
+ * @Func		- ledEffectRun											(Run a pre-defined LED effect)
+ * @Func		- ledEffectStop											(Stop a pre-defined effect and restore the pin to its initial state)
+ * @Func		-	ledEffectClear										(Clear any currently running LED effect)
+ * @Func		- ledEffectUnregister								(Release the allocated PWM instance)
  *
- * @Func		- boardLedEffectRun									(Run the Currently Registered LED Effect)
- * @Func		-	boardLedEffectStop								(Stop the Currently Registered LED Effect)
- * @Func		- boardLedEffectClear								(Turn off All LEDs and Unregister the Current LED Effect)
- * @Func		-	boardLedEffect										(Register and Run an LED Effect)		
- *
- * @Func		-	boardButtonEventAssign						(Assign an Event to a Button Action)
- * @Func		- boardButtonEnable									(Enable a Button)
- * @Func		- boardButtonDisable								(Disable a Button)
- * @Func		- boardButtonEnableAll							(Enable All Buttons)
- * @Func		- boardButtonDisableAll							(Disable All Buttons)
- *
- * @Func 		- boardInit													(Initialize Board Resources)
+ * @Func		-	ledEffectIsRunning								(Check whether there is an effect currently running)		
+ * @Func		-	ledEffectIsRegistered							(Check whether there is an effect currently registered)
  *
 */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/* C++ Library Header */
-
 #ifndef __APP_LED_EFFECTS_H__
 #define __APP_LED_EFFECTS_H__
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* Modules Used in This Library */
@@ -64,13 +35,7 @@
 #include "drv_pwm.h"
 
 /* Board IO Interface Definition Module */
-#ifndef	 USER_BOARD
-#include "data_board.h"
-#endif
-
-#ifdef  USER_BOARD
-#include "io_board.h"
-#endif
+#include "board_select.h"					//Select the correct board IO mappings
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

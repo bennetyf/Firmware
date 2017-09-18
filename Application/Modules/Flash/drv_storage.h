@@ -32,7 +32,7 @@
 	*	@Type fds_fptr_t				(Function Pointer for Waiting FDS Operation to Complete)
 	*
 	*	@Func	fdsResetVars			(Zero-initialize the Internal Variables)
-	*	@Func fdsRecSetup				(Setup an FDS Record)
+	*	@Func fdsRecConfig			(Setup an FDS Record)
 	*	@Func fdsInit						(Initialization of FDS System)
 	* @Func fdsRecWrite				(Write a Record)
 	* @Func fdsRecFind				(Locate a Record)
@@ -133,7 +133,7 @@ void fdsResetVars (void);
 	*	@Return		true	: Record set up succeeded
 	*
 */
-bool fdsRecSetup (const uint16_t file_id, const uint16_t rec_key, const uint32_t* const data_array, const uint16_t data_length);
+bool fdsRecConfig (const uint16_t file_id, const uint16_t rec_key, const uint32_t* const data_array, const uint16_t data_length);
 
 /** @Func Initialization of FDS
 	*

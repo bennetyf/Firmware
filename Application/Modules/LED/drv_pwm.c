@@ -37,7 +37,7 @@ static pwm_status_flags_rgb_t		pwm_flags =
 /* PWM Driver Function Implementations */
 
 /** @Func Setup the Duty Cycle Sequence in One Channel */
-void pwmSetup(const nrf_pwm_clk_t clk, const uint16_t cycle_top, const uint16_t * const seq_data, const uint16_t seq_length, const uint8_t pin, const char channel)
+void pwmConfig(const nrf_pwm_clk_t clk, const uint16_t cycle_top, const uint16_t * const seq_data, const uint16_t seq_length, const uint8_t pin, const char channel)
 {
 	// Setup the Configuration Structure and Sequence Structure of the Selected Channel
 	switch (channel){

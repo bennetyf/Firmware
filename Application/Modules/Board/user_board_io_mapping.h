@@ -1,4 +1,4 @@
-/** Library Name: "data_board.h" 
+/** Library Name: "user_board_io_mapping.h" 
  * @Brief 	This library defines all the IO utilities on the board
  *
  * @Macro		-	LED Pin Definitions
@@ -11,8 +11,8 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __IO_BOARD_H__
-#define __IO_BOARD_H__
+#ifndef __USER_BOARD_IO_MAPPING_H__
+#define __USER_BOARD_IO_MAPPING_H__
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -25,7 +25,7 @@ extern "C" {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 /* System Modules */
-#include "nrf_gpio.h"
+//#include "nrf_gpio.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -92,11 +92,11 @@ extern "C" {
 
 /** @Macro UART Pins */
 
-#define UART_RX  								PIN_08
-#define UART_TX 		 						PIN_06
-#define UART_RTS								2				// Flow control is always disabled, so this is dummy pin number.
-#define UART_CTS							  3				// Flow control is always disabled, so this is dummy pin number.
-#define UART_HWFC           		true
+#define RX_PIN_NUMBER  								PIN_08
+#define TX_PIN_NUMBER 		 						PIN_06
+#define RTS_PIN_NUMBER								2				// Flow control is always disabled, so this is dummy pin number.
+#define CTS_PIN_NUMBER							  3				// Flow control is always disabled, so this is dummy pin number.
+#define HWFC           								true
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

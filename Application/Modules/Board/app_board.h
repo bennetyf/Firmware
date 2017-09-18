@@ -1,10 +1,10 @@
-/** Library Name: "app_board.h" 
+/** Library Name: app_board.h
  * @Brief 	This library declares functions for board utilities
  * @Brief 	- Button Apps
  * @Brief 	- LED Effect Apps
  *
  * @Auther 	Feng Yuan
- * @Time 		25/08/2017
+ * @Time 	25/08/2017
  * @Version	1.0
  *
  * @Req 		This library requires the following modules to function
@@ -48,7 +48,7 @@
  * @Func		- boardButtonEnableAll							(Enable All Buttons)
  * @Func		- boardButtonDisableAll							(Disable All Buttons)
  *
- * @Func 		- boardInit													(Initialize Board Resources)
+ * @Func 		- boardConfig												(Configure Board Resources)
  *
 */
 
@@ -71,13 +71,7 @@
 #include "app_button.h"						//Button module
 
 /** User-defined Modules */
-#ifndef	 USER_BOARD
-#include "data_board.h"
-#endif
-
-#ifdef  USER_BOARD
-#include "io_board.h"
-#endif
+#include "board_select.h"					//Select the correct board IO mappings
 
 #include "app_led_effects.h"			//LED effects module
 
@@ -309,7 +303,7 @@ uint8_t boardButtonDisableAll(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/** @Func Function for initializing on-board resources.
+/** @Func Function for configuring on-board resources.
 	*
 	* @Brief The function initializes the board driver to allow LED effects, button reaction and power management.
 	* 			 Default events are assigned to buttons.
@@ -332,7 +326,7 @@ uint8_t boardButtonDisableAll(void);
 	* @Return NRF_ERROR_INVALID_PARAM   	-	If GPIOTE has too many users.
 	* @Return NRF_ERROR_INVALID_STATE   	-	If button or GPIOTE has not been initialized.
 */
-uint8_t boardInit(uint32_t init_type, uint32_t ticks_per_ms, board_event_callback_t callback);
+uint8_t boardConfig(uint32_t init_type, uint32_t ticks_per_ms, board_event_callback_t callback);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* C++ Library Header */

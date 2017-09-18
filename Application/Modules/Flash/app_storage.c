@@ -1,4 +1,4 @@
-/** File Name: storage.c
+/** File Name: app_storage.c
 	*
 	* @Author		: Feng Yuan
 	* @Time			: 01/08/2017
@@ -17,7 +17,7 @@
 */
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#include "storage.h"
+#include "app_storage.h"
 #include <stdlib.h>
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -112,7 +112,7 @@ flash_status_t 	setByteArray(const uint16_t file_id, const uint16_t index, const
 	bytes2words(bytes_size, bytes_array, words_array);
 	
 	// Set Up the Flash Record
-  if(!fdsRecSetup(file_id, MAP_INDEX_TO_REC_ID(index), words_array, words_size)){
+  if(!fdsRecConfig(file_id, MAP_INDEX_TO_REC_ID(index), words_array, words_size)){
 		free(words_array); // Clean up the temporary variable if failed
 		return FLASH_STATUS_SETUP_ERR;
 	}
@@ -164,7 +164,7 @@ flash_status_t 	setByteArray(const uint16_t file_id, const uint16_t index, const
 flash_status_t	getByteArray(const uint16_t file_id, const uint16_t index, const uint8_t bytes_size, uint8_t* bytes_array)
 {
 	// Set Up Record Meta Data
-	if(!fdsRecSetup(file_id, MAP_INDEX_TO_REC_ID(index), NULL, 0)){
+	if(!fdsRecConfig(file_id, MAP_INDEX_TO_REC_ID(index), NULL, 0)){
 		return FLASH_STATUS_SETUP_ERR;
 	}
 	
@@ -202,7 +202,7 @@ flash_status_t	getByteArray(const uint16_t file_id, const uint16_t index, const 
 flash_status_t	delByteArray(const uint16_t file_id, const uint16_t index)
 {
 	// Set Up the Record
-	if(!fdsRecSetup(file_id, MAP_INDEX_TO_REC_ID(index), NULL, 0)){
+	if(!fdsRecConfig(file_id, MAP_INDEX_TO_REC_ID(index), NULL, 0)){
 		return FLASH_STATUS_SETUP_ERR;
 	}
 	
