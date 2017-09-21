@@ -149,7 +149,7 @@ bool boardButtonIsPressed(uint8_t button_pin_no)
 #if BUTTONS_NUMBER > 0
 
 /** @Func Define Button Event Handler */
-static void board_button_event_handler(uint8_t button_pin_no, board_button_action_t button_action)
+static void board_button_event_handler(uint8_t button_pin_no, uint8_t button_action)
 {
 	board_event_t      		event  									= BOARD_EVENT_NOTHING;
   uint8_t           		button_idx 							= 0xFF;
@@ -162,7 +162,7 @@ static void board_button_event_handler(uint8_t button_pin_no, board_button_actio
 	BOARD_PIN_TO_IDX(board_button_list, BUTTONS_NUMBER, button_pin_no, button_idx);
 	
   if (button_idx < BUTTONS_NUMBER){ // Check whether the button pin number is within the button list
-		switch (button_action){
+		switch ((board_button_action_t)button_action){
 			
 			// Short Push Action
 			case BOARD_BUTTON_ACTION_PUSH:
@@ -302,15 +302,6 @@ uint8_t boardButtonEventAssign(uint8_t button_pin_no, board_button_action_t acti
 	
 	// Check whether the input button pin number is within the button list.
 	if (button_idx < BUTTONS_NUMBER){
-		
-		/*
-		// If the input board event is the default event
-		if (event == BOARD_EVENT_DEFAULT){
-			// Set default action: BOARD_EVENT_PUSH_BUTTON_x for PUSH actions, BOARD_EVENT_NOTHING for RELEASE and LONG_PUSH actions.
-      event = (action == BOARD_BUTTON_ACTION_PUSH) ? (board_event_t)(BOARD_EVENT_PUSH_BUTTON_0 + button_idx) : BOARD_EVENT_NOTHING;
-    }
-		*/
-		
 		// Assign the board event to different button actions
     switch (action){
 			case BOARD_BUTTON_ACTION_PUSH:
@@ -402,6 +393,31 @@ uint8_t boardButtonDisableAll(void)
 	return NRF_SUCCESS;
 #endif
 }
+
+/** @Func Function for Enabling the Wakeup Button */
+uint8_t boardWakeupButtonEnable(uint8_t button_pin_no)
+{
+#if BUTTONS_NUMBER > 0
+  nrf_gpio_cfg_sense_set(button_pin_no, BUTTONS_ACTIVE_STATE ? NRF_GPIO_PIN_SENSE_HIGH :NRF_GPIO_PIN_SENSE_LOW);
+  return NRF_SUCCESS;
+#else
+	UNUSED_VARIABLE(button_pin_no);
+	return NRF_ERROR_NOT_SUPPORTED;
+#endif
+}
+
+/** @Func Function for Disabling the Wakeup Button */
+uint8_t boardWakeupButtonDisable(uint8_t button_pin_no)
+{
+#if BUTTONS_NUMBER > 0
+	nrf_gpio_cfg_sense_set(button_pin_no, NRF_GPIO_PIN_NOSENSE);
+  return NRF_SUCCESS;
+#else
+	UNUSED_PARAMETER(button_pin_no);
+	return NRF_ERROR_NOT_SUPPORTED;
+#endif
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /** @Func Function for Initializing On-Board Resources */
@@ -479,3 +495,5 @@ uint8_t boardConfig(uint32_t init_type, uint32_t ticks_per_ms, board_event_callb
 	
 	return err_code;
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

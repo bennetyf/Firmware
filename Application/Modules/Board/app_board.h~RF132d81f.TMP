@@ -47,8 +47,6 @@
  * @Func		- boardButtonDisable								(Disable a Button)
  * @Func		- boardButtonEnableAll							(Enable All Buttons)
  * @Func		- boardButtonDisableAll							(Disable All Buttons)
- * @Func		- boardWakeupButtonEnable						(Enable the Wakeup Button)
- * @Func		- boardWakeupButtonDisable					(Disable the Wakeup Button)
  *
  * @Func 		- boardConfig												(Configure Board Resources)
  *
@@ -310,30 +308,10 @@ uint8_t boardButtonEnableAll(void);
 */
 uint8_t boardButtonDisableAll(void);
 
-/** @Func		Function for Enabling the Wakeup Button
-	*
-	* @Brief 	This function enables the wakeup button.
-	*	@Brief	The difference between this function and the normal button enabling function is that in this function, the button is set to be more sensitive
-	*
-	* @Para button_pin_no [uint8_t]: 				The button pin number to be enabled
-	*
-	* @Return NRF_SUCCESS						 			-	If the specified button was successfully enabled
-	* @Return NRF_ERROR_NOT_SUPPORTED			-	If the button pin number is not within the button list
-	*
-*/
+/** @Func Function for Enabling the Wakeup Button */
 uint8_t boardWakeupButtonEnable(uint8_t button_pin_no);
 
-/** @Func		Function for Disabling the Wakeup Button
-	*
-	* @Brief 	This function disables the wakeup button.
-	*	@Brief	The difference between this function and the normal button disabling function is that in this function, the button is set to be more sensitive
-	*
-	* @Para button_pin_no [uint8_t]: 				The button pin number to be disabled
-	*
-	* @Return NRF_SUCCESS						 			-	If the specified button was successfully disabled
-	* @Return NRF_ERROR_NOT_SUPPORTED			-	If the button pin number is not within the button list
-	*
-*/
+/** @Func Function for Disabling the Wakeup Button */
 uint8_t boardWakeupButtonDisable(uint8_t button_pin_no);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

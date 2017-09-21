@@ -144,7 +144,7 @@ typedef struct{
 	* @Para		sda_pin_no [uint8_t] : the SDA pin number of TWI interface
 	*
 */
-void twiConfig(uint8_t scl_pin_no, uint8_t sda_pin_no);
+void twiConfig(const uint8_t scl_pin_no, const uint8_t sda_pin_no);
 
 /** @Func 	Set Sensor LED Current
 	*
@@ -154,7 +154,7 @@ void twiConfig(uint8_t scl_pin_no, uint8_t sda_pin_no);
 	* @Para		led_type	[led_type_t] 	:	the LED type which can be choosen from RED,GREEN,BLUE
 	*
 */
-void sensorSetLedCurrent(uint8_t current, led_type_t led_type);
+void sensorSetLedCurrent(const uint8_t current, const led_type_t led_type);
 
 /** @Func 	Configuration of the Color Sensor
 	*
@@ -166,7 +166,7 @@ void sensorSetLedCurrent(uint8_t current, led_type_t led_type);
 	* @Return Propagate the TWI operation errors
 	*
 */
-uint8_t sensorSetup(uint16_t value);
+uint8_t sensorSetup(const uint16_t value);
 
 /** @Func 	Write a Byte Array into the Sensor Register from the Specified Address
 	*
@@ -180,7 +180,7 @@ uint8_t sensorSetup(uint16_t value);
 	*	@Return Propagate the TWI operation errors
 	*
 */
-uint8_t twiWriteByteArray(uint8_t * byte_array, uint8_t array_length, uint8_t address);
+uint8_t twiWriteByteArray(uint8_t * byte_array, const uint8_t array_length, const uint8_t address);
 
 /** @Func 	Read Out the Register Data into a Byte Array from the Specified Address
 	*
@@ -194,7 +194,7 @@ uint8_t twiWriteByteArray(uint8_t * byte_array, uint8_t array_length, uint8_t ad
 	*	@Return Propagate the TWI operation errors
 	*
 */
-uint8_t twiReadByteArray(uint8_t * byte_array, uint8_t array_length, uint8_t address);
+uint8_t twiReadByteArray(uint8_t * byte_array, const uint8_t array_length, const uint8_t address);
 
 /** @Func 	Turn On A Specified LED
 	*
@@ -206,7 +206,7 @@ uint8_t twiReadByteArray(uint8_t * byte_array, uint8_t array_length, uint8_t add
 	* @Return Propagate the TWI operation errors
 	*
 */
-uint8_t sensorTurnOnLed(led_type_t led_type);
+uint8_t sensorTurnOnLed(const led_type_t led_type);
 
 /** @Func 	Turn Off A Specified LED
 	*
@@ -229,7 +229,7 @@ uint8_t sensorTurnOffLed(void);
 	*	@Return Propagate the TWI operation errors
 	*
 */
-uint8_t sensorReadDataAll(uint8_t * byte_array, uint8_t array_length);
+uint8_t sensorReadDataAll(uint8_t * byte_array, const uint8_t array_length);
 
 /** @Func 	Read the Settings in A Specified Internal Register
 	*
@@ -243,7 +243,7 @@ uint8_t sensorReadDataAll(uint8_t * byte_array, uint8_t array_length);
 	*	@Return Propagate the TWI operation errors
 	*
 */
-uint8_t sensorReadRegister(uint8_t * byte_array, uint8_t array_length, reg_type_t reg_type);
+uint8_t sensorReadRegister(uint8_t * byte_array, const uint8_t array_length, const reg_type_t reg_type);
 
 /** @Func 	Start Color Sampling
 	*
@@ -276,7 +276,7 @@ uint8_t sensorSleep(void);
 	*	@Return Propagate the TWI operation errors
 	*	
 */
-uint8_t sensorSampleColor(uint8_t * byte_array, uint8_t array_length);
+uint8_t sensorSampleColor(uint8_t * byte_array, const uint8_t array_length);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	

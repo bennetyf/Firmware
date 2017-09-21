@@ -28,7 +28,7 @@ static sensor_led_current_t	sensor_led_current;
 /* Function Implementations */
 
 /** @Func TWI Configuration */
-void twiConfig(uint8_t scl_pin_no, uint8_t sda_pin_no)
+void twiConfig(const uint8_t scl_pin_no, const uint8_t sda_pin_no)
 {
   nrf_drv_twi_config_t const config =
 	{
@@ -43,7 +43,7 @@ void twiConfig(uint8_t scl_pin_no, uint8_t sda_pin_no)
 }
 
 /** @Func Sensor Configuration */
-void sensorSetLedCurrent(uint8_t current, led_type_t led_type)
+void sensorSetLedCurrent(const uint8_t current, const led_type_t led_type)
 {
 	// Set up the led current
 	sensor_led_current.led_red_current 		= RED_CURRENT;
@@ -64,14 +64,14 @@ void sensorSetLedCurrent(uint8_t current, led_type_t led_type)
 }
 
 /** @Func Configuration of the Color Sensor */
-uint8_t sensorSetup(uint16_t value)
+uint8_t sensorSetup(const uint16_t value)
 {
 	uint8_t setup_data[4] = {SENSOR_REG_CONTROL, SENSOR_SETUP, (value >> 8) & 0xff, value & 0xff};
 	return twiWriteByteArray(setup_data,4,SENSOR_ADDRESS);
 }
 
 /** @Func Write a Byte Array into the Sensor Register from the Specified Address */
-uint8_t twiWriteByteArray(uint8_t * byte_array, uint8_t array_length, uint8_t address)
+uint8_t twiWriteByteArray(uint8_t * byte_array, const uint8_t array_length, const uint8_t address)
 {
 	// Set up the data to be transmitted
 	app_twi_transfer_t const data[] = {
@@ -86,7 +86,7 @@ uint8_t twiWriteByteArray(uint8_t * byte_array, uint8_t array_length, uint8_t ad
 }
 
 /** @Func Read Out the Register Data into a Byte Array from the Specified Address */
-uint8_t twiReadByteArray(uint8_t * byte_array, uint8_t array_length, uint8_t address)
+uint8_t twiReadByteArray(uint8_t * byte_array, const uint8_t array_length, const uint8_t address)
 {
 	// Set up the data to be transmitted
 	app_twi_transfer_t const data[] = {
@@ -102,7 +102,7 @@ uint8_t twiReadByteArray(uint8_t * byte_array, uint8_t array_length, uint8_t add
 }
 
 /** @Func Turn On A Specified LED */
-uint8_t sensorTurnOnLed(led_type_t led_type)
+uint8_t sensorTurnOnLed(const led_type_t led_type)
 {
 	uint8_t err_code;
 	uint8_t	current[3];
@@ -153,14 +153,14 @@ uint8_t sensorTurnOnLed(led_type_t led_type)
 /** @Func Turn Off A Specified LED */
 uint8_t sensorTurnOffLed(void)
 {
-	uint8_t current[] = { SENSOR_REG_COLOR_LED_DRIVE_CONTROL_1, \
+	uint8_t current[3] = { SENSOR_REG_COLOR_LED_DRIVE_CONTROL_1, \
 												LED_OFF_COMMAND|SENSOR_LED_RED_CURRENT_0MA, \
 												SENSOR_LED_GREEN_CURRENT_0MA|SENSOR_LED_BLUE_CURRENT_0MA};
-	return twiWriteByteArray(current, sizeof(current), SENSOR_ADDRESS);
+	return twiWriteByteArray(current, 3, SENSOR_ADDRESS);
 }
 
 /** @Func Read Out the Acquired Sensor Data */
-uint8_t sensorReadDataAll(uint8_t * byte_array, uint8_t array_length)
+uint8_t sensorReadDataAll(uint8_t * byte_array, const uint8_t array_length)
 {
 	uint16_t timing = MANUAL_TIMING;
 	uint8_t err_code;
@@ -204,7 +204,7 @@ uint8_t sensorReadDataAll(uint8_t * byte_array, uint8_t array_length)
 }
 
 /** @Func Read the Settings in A Specified Internal Register */
-uint8_t sensorReadRegister(uint8_t * byte_array, uint8_t array_length, reg_type_t reg_type)
+uint8_t sensorReadRegister(uint8_t * byte_array, const uint8_t array_length, const reg_type_t reg_type)
 {
 	switch (reg_type){
 		case LED_CTRL_REG:
@@ -226,7 +226,7 @@ uint8_t sensorSampleStart(void)
 /** @Func Put the Sensor into Sleeping */
 uint8_t sensorSleep(void)
 {
-	uint8_t data[2]  = {SENSOR_REG_CONTROL,SENSOR_SLEEP};
+	uint8_t data[2]  = {SENSOR_REG_CONTROL, SENSOR_SLEEP};
 	return twiWriteByteArray(data,2,SENSOR_ADDRESS);
 }
 
