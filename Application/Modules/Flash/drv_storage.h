@@ -26,30 +26,31 @@
 	*	The two variables include fds_state and fds_flags which store the fds internal states and all the fds internal flags respectively.
 	*	The default async function is fds_wait which put the MCU into sleeping mode and wait until the flash operation is done.
 	*************************************************************************************************************************************************
-	*	@Type	fds_rec_t					(Record Data Description Type)
-	*	@Type	fds_state_t				(Record State Type)
-	*	@Type fds_flags_t				(FDS Operation Flags Type)
-	*	@Type fds_fptr_t				(Function Pointer for Waiting FDS Operation to Complete)
+	*	@Type	fds_rec_t							(Record Data Description Type)
+	*	@Type	fds_state_t						(Record State Type)
+	*	@Type fds_flags_t						(FDS Operation Flags Type)
+	*	@Type fds_fptr_t						(Function Pointer for Waiting FDS Operation to Complete)
+	*	@Type fds_evt_handler_t			(The FDS event handler type)
 	*
-	*	@Func	fdsResetVars			(Zero-initialize the Internal Variables)
-	*	@Func fdsRecConfig			(Setup an FDS Record)
-	*	@Func fdsInit						(Initialization of FDS System)
-	* @Func fdsRecWrite				(Write a Record)
-	* @Func fdsRecFind				(Locate a Record)
-	*	@Func fdsRecRead				(Read a Record)
-	* @Func	fdsRecUpdate			(Update a Record)
-	* @Func fdsRecDelete			(Delete a Record)
-	*	@Func fdsGC							(Garbage Collection)
-	*	@Func fdsSetAsynFun			(Set Async Operation)
-	*	@Func fdsGetState				(Get FDS Status)
-	* @Func fdsGetFlags				(Get FDS Flags)
+	*	@Func	fdsResetVars					(Zero-initialize the Internal Variables)
+	*	@Func fdsRecConfig					(Setup an FDS Record)
+	*	@Func fdsInit								(Initialization of FDS System)
+	* @Func fdsRecWrite						(Write a Record)
+	* @Func fdsRecFind						(Locate a Record)
+	*	@Func fdsRecRead						(Read a Record)
+	* @Func	fdsRecUpdate					(Update a Record)
+	* @Func fdsRecDelete					(Delete a Record)
+	*	@Func fdsGC									(Garbage Collection)
+	*	@Func fdsSetAsynFun					(Set Async Operation)
+	*	@Func fdsGetState						(Get FDS Status)
+	* @Func fdsGetFlags						(Get FDS Flags)
 	*
-	*	@Func fdsSetInitFlag		(Set FDS Flags)
-	*	@Func	fdsSetWriteFlag		(Set FDS Flags)
-	*	@Func fdsSetUpdateFlag	(Set FDS Flags)
-	*	@Func fdsSetDelFlag			(Set FDS Flags)
-	* @Func fdsSetGcFlag			(Set FDS Flags)
-	* @Func fdsSetLogFlag			(Set FDS Flags)
+	*	@Func fdsSetInitFlag				(Set FDS Flags)
+	*	@Func	fdsSetWriteFlag				(Set FDS Flags)
+	*	@Func fdsSetUpdateFlag			(Set FDS Flags)
+	*	@Func fdsSetDelFlag					(Set FDS Flags)
+	* @Func fdsSetGcFlag					(Set FDS Flags)
+	* @Func fdsSetLogFlag					(Set FDS Flags)
 	*
 */
 
@@ -60,6 +61,9 @@
 /* Include Essential Headers */
 #include "app_error.h"
 #include "fds.h"
+
+/* Include the Event Handlers */
+#include "event_handlers.h"
 
 /* Include NRF Libraries */
 #include "nrf_log.h"
@@ -105,6 +109,9 @@ typedef struct
 /** @Type The function pointer type to store the async function */
 typedef void (*fds_fptr_t)(uint8_t*);
 
+/** @Type The FDS event handler type */
+typedef void (*fds_evt_handler_t)(const fds_evt_t* const);
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /** @Func Zero-initialize the Internal Variables
@@ -144,7 +151,7 @@ bool fdsRecConfig (const uint16_t file_id, const uint16_t rec_key, const uint32_
 	* @Return Propogate internal errors
 	*
 */
-ret_code_t fdsInit (void);
+ret_code_t fdsInit (fds_evt_handler_t fds_event_handler);
 	
 /** @Func Write a Record
 	*

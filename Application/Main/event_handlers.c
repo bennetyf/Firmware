@@ -337,3 +337,62 @@ void board_event_handler(board_event_t event)
 //			break;
 //	}
 }
+
+/* Initialization of the FDS event handler(This can be defined in the "module_scheduler.c" file that aims to manage all the modules */
+void fds_event_handler(fds_evt_t const * const p_fds_evt){
+	switch (p_fds_evt->id){
+		case FDS_EVT_INIT:  	//!< Event for @ref fds_init.
+		if (p_fds_evt->result == FDS_SUCCESS){
+			fdsSetInitFlag(1);
+			if(fdsGetFlags().fds_log_flag) {
+				NRF_LOG_INFO("FDS_EVENT: HANDLER INIT EVENT!\r\n");
+			}
+		}else{
+			if(fdsGetFlags().fds_log_flag) {
+				NRF_LOG_INFO("FDS_EVENT: HANDLER INIT FAILED!\r\n");
+			}
+		}
+		break;
+		case FDS_EVT_WRITE: 		//!< Event for @ref fds_record_write and @ref fds_record_write_reserved.
+		if (p_fds_evt->result == FDS_SUCCESS){
+			fdsSetWriteFlag(1);
+			if(fdsGetFlags().fds_log_flag) {
+				NRF_LOG_INFO("FDS_EVENT: WRITE EVENT!\r\n");
+			}
+		}
+		break;
+		case FDS_EVT_UPDATE: 		//!< Event for @ref fds_record_update.
+		if (p_fds_evt->result == FDS_SUCCESS){
+			fdsSetUpdateFlag(1);
+			if(fdsGetFlags().fds_log_flag) {
+				NRF_LOG_INFO("FDS_EVENT: UPDATE EVENT!\r\n");
+			}
+		}
+		break;
+		case FDS_EVT_DEL_RECORD: //!< Event for @ref fds_record_delete.
+		if (p_fds_evt->result == FDS_SUCCESS){
+			fdsSetDelFlag(1);
+			if(fdsGetFlags().fds_log_flag) {
+				NRF_LOG_INFO("FDS_EVENT: RECORD DELETED!\r\n");
+			}
+		}
+		break;
+		case FDS_EVT_DEL_FILE:   //!< Event for @ref fds_file_delete.
+		if (p_fds_evt->result == FDS_SUCCESS){
+			fdsSetDelFlag(1);
+			if(fdsGetFlags().fds_log_flag) {
+				NRF_LOG_INFO("FDS_EVENT: FILE DELETED!\r\n");
+			}
+		}
+		break;
+		case FDS_EVT_GC:         //!< Event for @ref fds_gc.
+		if (p_fds_evt->result == FDS_SUCCESS){
+			fdsSetGcFlag(1);
+			if(fdsGetFlags().fds_log_flag) {
+				NRF_LOG_INFO("FDS_EVENT: GARBAGE COLLECTION!\r\n");
+			}
+		}
+		default:
+		break;
+	}
+}

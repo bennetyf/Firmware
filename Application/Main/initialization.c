@@ -202,8 +202,11 @@ static void boardInit(bool * p_erase_bonds)
 static void pinInit(void)
 {
 	nrf_gpio_cfg_output(LED_RED);
+	nrf_gpio_pin_write(LED_RED,1);
 	nrf_gpio_cfg_output(LED_GREEN);
+	nrf_gpio_pin_write(LED_GREEN,1);
 	nrf_gpio_cfg_output(LED_BLUE);
+	nrf_gpio_pin_write(LED_BLUE,1);
 
 	nrf_gpio_cfg_input(BOARD_BUTTON_0, NRF_GPIO_PIN_PULLUP);
 	
@@ -232,6 +235,15 @@ static void pinInit(void)
 static void serviceInit(void)
 {
 	/*Your Code Here*/
+}
+
+/*===========================================================================================================================*/
+
+/** @Func Function for initializing the storage module */
+static void storageInit(void)
+{
+	fdsInit(fds_event_handler);
+	initAllRecords();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -274,6 +286,9 @@ void moduleInit(void)
 	
 	// Initialize Connection Parameters
 	connParamsInit();
+	
+	// Initialize Storage Module
+	storageInit();
 	
 	if(isLoggerEnabled()){
 		NRF_LOG_INFO("Initialization Completed...\r\n");

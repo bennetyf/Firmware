@@ -8,9 +8,6 @@
 /* Include the library header */
 #include "drv_storage.h"
 
-/* Include the scheduler */
-#include "module_scheduler.h"
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* Set two internal variables and one default async operation function */
 
@@ -22,6 +19,65 @@ static fds_flags_t	fds_flags; //Internal variable to store all fds flags.
 static void fds_wait(uint8_t* flag){
 	while(*flag == 0) {
 		APP_ERROR_CHECK(sd_app_evt_wait());
+	}
+}
+
+/** @Func Default FDS Event Handler */
+static void fds_event_handler_default(fds_evt_t const * const p_fds_evt){
+	switch (p_fds_evt->id){
+		case FDS_EVT_INIT:  	//!< Event for @ref fds_init.
+		if (p_fds_evt->result == FDS_SUCCESS){
+			fdsSetInitFlag(1);
+			if(fdsGetFlags().fds_log_flag) {
+				NRF_LOG_INFO("FDS_EVENT: HANDLER INIT EVENT!\r\n");
+			}
+		}else{
+			if(fdsGetFlags().fds_log_flag) {
+				NRF_LOG_INFO("FDS_EVENT: HANDLER INIT FAILED!\r\n");
+			}
+		}
+		break;
+		case FDS_EVT_WRITE: 		//!< Event for @ref fds_record_write and @ref fds_record_write_reserved.
+		if (p_fds_evt->result == FDS_SUCCESS){
+			fdsSetWriteFlag(1);
+			if(fdsGetFlags().fds_log_flag) {
+				NRF_LOG_INFO("FDS_EVENT: WRITE EVENT!\r\n");
+			}
+		}
+		break;
+		case FDS_EVT_UPDATE: 		//!< Event for @ref fds_record_update.
+		if (p_fds_evt->result == FDS_SUCCESS){
+			fdsSetUpdateFlag(1);
+			if(fdsGetFlags().fds_log_flag) {
+				NRF_LOG_INFO("FDS_EVENT: UPDATE EVENT!\r\n");
+			}
+		}
+		break;
+		case FDS_EVT_DEL_RECORD: //!< Event for @ref fds_record_delete.
+		if (p_fds_evt->result == FDS_SUCCESS){
+			fdsSetDelFlag(1);
+			if(fdsGetFlags().fds_log_flag) {
+				NRF_LOG_INFO("FDS_EVENT: RECORD DELETED!\r\n");
+			}
+		}
+		break;
+		case FDS_EVT_DEL_FILE:   //!< Event for @ref fds_file_delete.
+		if (p_fds_evt->result == FDS_SUCCESS){
+			fdsSetDelFlag(1);
+			if(fdsGetFlags().fds_log_flag) {
+				NRF_LOG_INFO("FDS_EVENT: FILE DELETED!\r\n");
+			}
+		}
+		break;
+		case FDS_EVT_GC:         //!< Event for @ref fds_gc.
+		if (p_fds_evt->result == FDS_SUCCESS){
+			fdsSetGcFlag(1);
+			if(fdsGetFlags().fds_log_flag) {
+				NRF_LOG_INFO("FDS_EVENT: GARBAGE COLLECTION!\r\n");
+			}
+		}
+		default:
+		break;
 	}
 }
 
@@ -72,12 +128,17 @@ bool fdsRecConfig (const uint16_t file_id, const uint16_t rec_key, const uint32_
 }
 
 /** @Func Initialization of FDS */
-ret_code_t fdsInit (void){
+ret_code_t fdsInit (fds_evt_handler_t event_handler){
 	//	Initializing essential fields
 	fdsResetVars();
 	
 	// Register FDS Event Handler
-	fds_state.ret 		 =	fds_register(fds_event_handler);
+	if(event_handler != NULL){
+		fds_state.ret 		 =	fds_register(event_handler);
+	}
+	else{
+		fds_state.ret 		 =	fds_register(fds_event_handler_default);
+	}
 	
 	// Handle Handler Registration Error
 	if (fds_state.ret != FDS_SUCCESS){
@@ -353,65 +414,4 @@ void fdsSetLogFlag(uint8_t flag)
 	fds_flags.fds_log_flag	=	flag;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/* Initialization of the FDS event handler(This can be defined in the "module_scheduler.c" file that aims to manage all the modules */
-/*
-static void fds_event_handler(fds_evt_t const * const p_fds_evt){
-	switch (p_fds_evt->id){
-		case FDS_EVT_INIT:  	//!< Event for @ref fds_init.
-		if (p_fds_evt->result == FDS_SUCCESS){
-			fdsSetInitFlag(1);
-			if(fdsGetFlags().fds_log_flag) {
-				NRF_LOG_INFO("FDS_EVENT: HANDLER INIT EVENT!\r\n");
-			}
-		}else{
-			if(fdsGetFlags().fds_log_flag) {
-				NRF_LOG_INFO("FDS_EVENT: HANDLER INIT FAILED!\r\n");
-			}
-		}
-		break;
-		case FDS_EVT_WRITE: 		//!< Event for @ref fds_record_write and @ref fds_record_write_reserved.
-		if (p_fds_evt->result == FDS_SUCCESS){
-			fdsSetWriteFlag(1);
-			if(fdsGetFlags().fds_log_flag) {
-				NRF_LOG_INFO("FDS_EVENT: WRITE EVENT!\r\n");
-			}
-		}
-		break;
-		case FDS_EVT_UPDATE: 		//!< Event for @ref fds_record_update.
-		if (p_fds_evt->result == FDS_SUCCESS){
-			fdsSetUpdateFlag(1);
-			if(fdsGetFlags().fds_log_flag) {
-				NRF_LOG_INFO("FDS_EVENT: UPDATE EVENT!\r\n");
-			}
-		}
-		break;
-		case FDS_EVT_DEL_RECORD: //!< Event for @ref fds_record_delete.
-		if (p_fds_evt->result == FDS_SUCCESS){
-			fdsSetDelFlag(1);
-			if(fdsGetFlags().fds_log_flag) {
-				NRF_LOG_INFO("FDS_EVENT: RECORD DELETED!\r\n");
-			}
-		}
-		break;
-		case FDS_EVT_DEL_FILE:   //!< Event for @ref fds_file_delete.
-		if (p_fds_evt->result == FDS_SUCCESS){
-			fdsSetDelFlag(1);
-			if(fdsGetFlags().fds_log_flag) {
-				NRF_LOG_INFO("FDS_EVENT: FILE DELETED!\r\n");
-			}
-		}
-		break;
-		case FDS_EVT_GC:         //!< Event for @ref fds_gc.
-		if (p_fds_evt->result == FDS_SUCCESS){
-			fdsSetGcFlag(1);
-			if(fdsGetFlags().fds_log_flag) {
-				NRF_LOG_INFO("FDS_EVENT: GARBAGE COLLECTION!\r\n");
-			}
-		}
-		default:
-		break;
-	}
-}
-*/
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

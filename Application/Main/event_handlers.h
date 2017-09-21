@@ -112,6 +112,8 @@ void sys_evt_dispatch(uint32_t sys_evt);
 */
 void board_event_handler(board_event_t event);
 
+void fds_event_handler(fds_evt_t const * const p_fds_evt);
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* C++ Library Header */
