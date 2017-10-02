@@ -114,6 +114,9 @@ void board_event_handler(board_event_t event);
 
 void fds_event_handler(fds_evt_t const * const p_fds_evt);
 
+/** @Func Return the Color Sensor Data Array */
+uint8_t * sensorDataAddress(uint8_t * array_length_ptr);
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* C++ Library Header */

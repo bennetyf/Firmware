@@ -22,6 +22,11 @@
 /** @Variable Handle of the current connection */
 static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID;
 
+/** @Variable The Array to Store the Collected Color Sensor Data */
+static const uint8_t 	array_length = 18;
+static uint8_t 				sensor_data_array[array_length];
+static bool						is_sensor_sampling_complete = false;
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* Function Implementations */
@@ -281,6 +286,17 @@ void sys_evt_dispatch(uint32_t sys_evt)
     ble_advertising_on_sys_evt(sys_evt);
 }
 
+
+/** @Func Scheduler Event Handler for Color Sensor */
+void sensor_scheduler_event_handler(void *p_event_data, uint16_t event_size)
+{
+	is_sensor_sampling_complete = false;
+	uint8_t err_code = sensorSampleColor(sensor_data_array,array_length);
+	if(err_code == NRF_SUCCESS){
+		is_sensor_sampling_complete = true;
+	}
+}
+
 /** @Func Function for handling events from the BSP module */
 void board_event_handler(board_event_t event)
 {
@@ -310,6 +326,14 @@ void board_event_handler(board_event_t event)
 			NRF_LOG_INFO("BOARD_TEST_EVENT_4!\r\n");
 			NRF_LOG_FLUSH();
 			break;
+		case BOARD_TEST_EVENT_5:
+		{
+			boardLedEffect(LED_EFFECT_SECOND);
+			app_sched_event_put(NULL,0,sensor_scheduler_event_handler);
+			NRF_LOG_INFO("BOARD_TEST_EVENT_5!\r\n");
+			NRF_LOG_FLUSH();
+			break;
+		}
 		default:
 			break;
 	}
@@ -396,3 +420,22 @@ void fds_event_handler(fds_evt_t const * const p_fds_evt){
 		break;
 	}
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* Accessor Functions */
+
+/** @Func Return the Color Sensor Data Array */
+uint8_t * sensorDataAddress(uint8_t * array_length_ptr)
+{
+	if(is_sensor_sampling_complete){
+		is_sensor_sampling_complete = false;
+		*array_length_ptr = array_length;
+		return sensor_data_array;
+	}
+	else{
+		return NULL;
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

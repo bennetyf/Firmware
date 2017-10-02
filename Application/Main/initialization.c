@@ -191,7 +191,7 @@ static void boardInit(bool * p_erase_bonds)
 	
 	/* Assign Some Events Here */
 	boardButtonEventAssign(BOARD_BUTTON_0, BOARD_BUTTON_ACTION_PUSH, BOARD_TEST_EVENT_2);
-	boardButtonEventAssign(BOARD_BUTTON_0, BOARD_BUTTON_ACTION_RELEASE, BOARD_TEST_EVENT_3);
+	boardButtonEventAssign(BOARD_BUTTON_0, BOARD_BUTTON_ACTION_RELEASE, BOARD_TEST_EVENT_5);
 	boardButtonEventAssign(BOARD_BUTTON_0, BOARD_BUTTON_ACTION_LONG_PUSH, BOARD_TEST_EVENT_0);
 	boardButtonEventAssign(BOARD_BUTTON_0, BOARD_BUTTON_ACTION_RELEASE_AFTER_LONG_PUSH, BOARD_TEST_EVENT_1);
 }
@@ -246,6 +246,33 @@ static void storageInit(void)
 	initAllRecords();
 }
 
+/** @Func Initialize the Scheduler */
+static void schedulerInit(void)
+{
+	// Initialize the Scheduler
+	APP_SCHED_INIT(SCHED_MAX_EVENT_DATA_SIZE, SCHED_QUEUE_SIZE);
+}
+
+/** @Func Function for initializing the sensor module */
+static void sensorInit(void)
+{
+	//Initialize I2C Interface
+#ifdef __APP_SENSOR_H__
+	sensorConfig(I2C_SCL,I2C_SDA,NULL,false);
+#endif
+	
+#ifdef __APP_TWI_SENSOR_H__
+	sensorTWIConfig(I2C_SCL,I2C_SDA,NULL,false);
+	sensorRTCConfig();
+	sensorPPIConfig();
+#endif
+	
+	//Initialize Sensor LED Currents
+	sensorLedCurrentConfig(RED_CURRENT,RED);
+	sensorLedCurrentConfig(GREEN_CURRENT,GREEN);
+	sensorLedCurrentConfig(BLUE_CURRENT,BLUE);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /** @Func Initialize All the Modules */
@@ -288,7 +315,13 @@ void moduleInit(void)
 	connParamsInit();
 	
 	// Initialize Storage Module
-	storageInit();
+	// storageInit();
+	
+	// Initialize the Scheduler
+	schedulerInit();
+	
+	// Initialize Sensor Module
+	sensorInit();
 	
 	if(isLoggerEnabled()){
 		NRF_LOG_INFO("Initialization Completed...\r\n");

@@ -6,36 +6,35 @@
 	* @Time 		18/09/2017
 	* @Version	1.0
 	*
-	*
-	* @Macro		MAX_TWI_QUEUE_SIZE									(Maximum Queue Size for the TWI Module)
-	*	@Macro		POST_SAMPLE_WAIT_TIME_MARGIN				(Post Sample Waiting Time Margin)
-	* @Macro		RED_CURRENT													(Red LED Current - 9.6mA)
-	* @Macro		GREEN_CURRENT												(GREEN_CURRENT - 12mA)
-	*	@Macro		BLUE_CURRENT												(BLUE_CURRENT - 2.4mA)
-	*	@Macro		LED_ON_COMMAND											(Turn On LED)
-	* @Macro 		LED_OFF_COMMAND											(Turn Off LED)
-	*	@Macro		INTEGRATION_TIME										(Integration Time Settings)
-	*	@Macro 		MANUAL_TIMING												(Manual Timing)
-	* @Macro		SENSOR_SETUP												(Sensor Setup Command)
-	* @Macro		START_SAMPLING											(Sensor Sampling Command)
-	* @Macro		SENSOR_SLEEP												(Sensor Sleeping Command)
+	* @Req			This module requires the following modules to be enabled
+	* @Req			- TWI Transaction Manager 					(Configured in "sdk_config.h")
+	* @Req		  - RTC Driver												(Configured in "sdk_config.h")
+	* @Req		  - NRF Delay													(Included in "nrf_delay.h")
 	*
 	* @Type			led_type_t													(LED Types)
 	*	@Type			reg_type_t													(Register Types)
 	*	@Type			sensor_led_current_t								(Data Type to Store the LED Current Settings)
+	*	@Type			sensor_data_t												(Data Type to Store the Byte Array Address and Array Length)
+	* @Type			sensor_led_flags_t									(Data Type to Store the LED Status)
 	*
-	*	@Func			twiConfig														(Configuration of TWI Peripheral)
+	*	@Func			sensorConfig												(Configuration of the Sensor Module including the TWI Peripheral)
 	* @Func			sensorSetLedCurrent									(Set Sensor LED Current)
-	*	@Func			sensorSetup													(Configuration of the Color Sensor)
-	* @Func			twiWriteByteArray										(Write a Byte Array into the Sensor Register from the Specified Address)
-	* @Func			twiReadByteArray										(Read Out the Register Data into a Byte Array from the Specified Address)
+	*
+	* @Func			sensorWriteByteArray								(Write a Byte Array into the Sensor Register from the Specified Address)
+	* @Func			sensorReadByteArray									(Read Out the Register Data into a Byte Array from the Specified Address)
 	* @Func			sensorTurnOnLed											(Turn On A Specified LED)
 	* @Func			sensorTurnOffLed										(Turn Off A Specified LED)
-	* @Func			sensorReadDataAll										(Read Out the Acquired Sensor Data)
-	* @Func			sensorReadRegister									(Read the Settings in A Specified Internal Register)
+	*	@Func			sensorSetup													(Configuration of the Color Sensor)
 	* @Func			sensorSampleStart										(Start Color Sampling)
 	* @Func			sensorSleep													(Put the Sensor into Sleeping)
+	*
+	* @Func			sensorReadData											(Read Out the Acquired Sensor Data)
 	*	@Func			sensorSampleColor										(Sampling From All Three Channels)
+	*
+	* @Func			sensorGetInstance										(Get the Address of the Internal TWI Instance)
+	* @Func			sensorIsRedOn												(Test Whether the Red LED is Currently On)
+	* @Func			sensorIsGreenOn											(Test Whether the Green LED is Currently On)
+	* @Func			sensorIsBlueOn											(Test Whether the Blue LED is Currently On)
 	*
 */
 
@@ -49,55 +48,10 @@
 /* System Modules */
 
 #include "data_sensor_config.h"
-#include "app_twi.h"
 #include "app_util_platform.h"
+#include "app_twi.h"
+#include "nrf_drv_rtc.h"
 #include "nrf_delay.h"
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/* Macro Definitions */
-
-/** @Macro Maximum Queue Size for the TWI Module */
-#define MAX_TWI_QUEUE_SIZE						5
-
-/** @Macro Post Sample Waiting Time Margin */
-#define POST_SAMPLE_WAIT_TIME_MARGIN  1.2  										//1.05 some zero-readings
-
-/* LED Current Settings */
-/** @Macro Red LED - 9.6mA */
-#define RED_CURRENT 			 						(SENSOR_LED_RED_CURRENT_64MA|SENSOR_LED_RED_CURRENT_32MA)
-													
-/** @Macro Green LED - 12mA */
-#define GREEN_CURRENT 								(SENSOR_LED_GREEN_CURRENT_64MA|SENSOR_LED_GREEN_CURRENT_32MA \
-																			|SENSOR_LED_GREEN_CURRENT_16MA|SENSOR_LED_GREEN_CURRENT_8MA)
-
-/** @Macro Blue LED - 2.4mA */
-#define BLUE_CURRENT									(SENSOR_LED_BLUE_CURRENT_16MA|SENSOR_LED_BLUE_CURRENT_8MA)
-
-/** @Macro LED Operation Commands */
-#define LED_ON_COMMAND								(SENSOR_LED_RESET_OPERATION|SENSOR_LED_DC_MODE_DC|SENSOR_LED_ONE_TENTH_MODE_ONE_TENTH)
-
-#define LED_OFF_COMMAND								(SENSOR_LED_RESET_RESET|SENSOR_LED_SLEEP_SLEEP \
-																			|SENSOR_LED_DC_MODE_DC|SENSOR_LED_ONE_TENTH_MODE_ONE_TENTH)	
-
-/** @Macro Integration Time Settings */
-#define INTEGRATION_TIME 							SENSOR_CTRL_INT_TIME_SETTING_32US
-
-/** @Macro Manual Timing */
-#define MANUAL_TIMING									1875u			//32us X 1875 = 60ms
-
-/* Sensor Configurations */
-/** @Macro Sensor Setup Command */
-#define SENSOR_SETUP 									(SENSOR_CTRL_RESET_OPERATION|SENSOR_CTRL_REG_RESET_03_TO_0A \
-																			|SENSOR_CTRL_GAIN_SELECT_LOW|SENSOR_CTRL_INT_MODE_MANUAL_SETTING)
-																			
-/** @Macro Sensor Sampling Command */
-#define START_SAMPLING 								(SENSOR_CTRL_RESET_OPERATION|SENSOR_CTRL_SLEEP_OPERATION \
-																			|SENSOR_CTRL_REG_RESET_RESET_RELEASE|SENSOR_CTRL_GAIN_SELECT_LOW \
-																			|SENSOR_CTRL_INT_MODE_MANUAL_SETTING|SENSOR_CTRL_INT_TIME_SETTING_32US)
-
-/** @Macro Sensor Sleep Command */
-#define SENSOR_SLEEP									(SENSOR_CTRL_SLEEP_SLEEP|SENSOR_CTRL_GAIN_SELECT_LOW|SENSOR_CTRL_INT_MODE_MANUAL_SETTING)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -108,22 +62,35 @@ extern "C" {
 #endif
 	
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 /* Type Declarations */
 
-/** @Type LED Types */
+/** @Type LED Types
+	* 
+	* @Brief This is an enumerate type representing the three LEDs
+	*
+*/
 typedef enum{
 	RED,
 	GREEN,
 	BLUE
 }led_type_t;
 
-/** @Type Register Types */
+/** @Type Register Types
+	*
+	* @Brief This is an enumerate type representing the internal color sensor registers
+	*
+*/
 typedef enum{
 	LED_CTRL_REG,
 	SENSOR_CTRL_REG
 }reg_type_t;
 
-/** @Type Data Type to Store the LED Current Settings */
+/** @Type 	Data Type to Store the LED Current Settings
+	*
+	*	@Brief 	This structure is for storing the LED currents of the color sensor
+	*
+*/
 typedef struct{
 	// LED Current Settings
 	uint8_t					led_red_current;
@@ -131,7 +98,32 @@ typedef struct{
 	uint8_t					led_blue_current;
 }sensor_led_current_t;
 
+/** @Type 	Data Type to Store the Byte Array Address and Array Length
+	*
+	* @Brief 	This structure is for temporarily storing the byte array address, array length and sensor register name
+	* @Brief 	This usage is because the sample-reading function returns immediately in non-blocking mode.
+	* @Brief 	The left work is to be completed by the event handler. So, the following information should be passed to the event handler in some way.
+	*
+*/
+typedef struct{
+	uint8_t					* array;
+	uint8_t					length;
+	uint8_t					reg_name;
+}sensor_data_t;
+
+/** @Type 	Data Type to Store the LED Status (LED Flags)
+	*
+	* @Brief 	This structure is for storing the LED on/off states, which is introduced as a requirement in non-blocking mode
+	*
+*/
+typedef struct{
+	bool		is_led_red_on;
+	bool 		is_led_green_on;
+	bool 		is_led_blue_on;
+}sensor_led_flags_t;
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /* Function Declarations */
 
 /** @Func		Configuration of TWI Peripheral
@@ -144,7 +136,7 @@ typedef struct{
 	* @Para		sda_pin_no [uint8_t] : the SDA pin number of TWI interface
 	*
 */
-void twiConfig(const uint8_t scl_pin_no, const uint8_t sda_pin_no);
+void sensorConfig(const uint8_t scl_pin_no, const uint8_t sda_pin_no, nrf_drv_rtc_handler_t rtc_event_handler, bool is_blocking_mode);
 
 /** @Func 	Set Sensor LED Current
 	*
@@ -154,19 +146,7 @@ void twiConfig(const uint8_t scl_pin_no, const uint8_t sda_pin_no);
 	* @Para		led_type	[led_type_t] 	:	the LED type which can be choosen from RED,GREEN,BLUE
 	*
 */
-void sensorSetLedCurrent(const uint8_t current, const led_type_t led_type);
-
-/** @Func 	Configuration of the Color Sensor
-	*
-	*	@Brief	This function sets the sensor settings
-	*
-	* @Para		value [uint16_t] : the value to be written into the register
-	*
-	* @Return NRF_SUCCESS : The TWI operation succeeded
-	* @Return Propagate the TWI operation errors
-	*
-*/
-uint8_t sensorSetup(const uint16_t value);
+void sensorLedCurrentConfig(const uint8_t current, const led_type_t led_type);
 
 /** @Func 	Write a Byte Array into the Sensor Register from the Specified Address
 	*
@@ -180,7 +160,7 @@ uint8_t sensorSetup(const uint16_t value);
 	*	@Return Propagate the TWI operation errors
 	*
 */
-uint8_t twiWriteByteArray(uint8_t * byte_array, const uint8_t array_length, const uint8_t address);
+uint8_t sensorWriteByteArray(uint8_t * byte_array, const uint8_t array_length, const uint8_t address);
 
 /** @Func 	Read Out the Register Data into a Byte Array from the Specified Address
 	*
@@ -194,7 +174,9 @@ uint8_t twiWriteByteArray(uint8_t * byte_array, const uint8_t array_length, cons
 	*	@Return Propagate the TWI operation errors
 	*
 */
-uint8_t twiReadByteArray(uint8_t * byte_array, const uint8_t array_length, const uint8_t address);
+uint8_t sensorReadByteArray(uint8_t * byte_array, const uint8_t array_length, const uint8_t address);
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /** @Func 	Turn On A Specified LED
 	*
@@ -216,34 +198,19 @@ uint8_t sensorTurnOnLed(const led_type_t led_type);
 	*	@Return Propagate the TWI operation errors
 	*
 */
-uint8_t sensorTurnOffLed(void);
+uint8_t sensorTurnOffLed(const led_type_t led_type);
 
-/** @Func 	Read Out the Acquired Sensor Data
+/** @Func 	Configuration of the Color Sensor
 	*
-	* @Brief	This function reads out all the sensor data (6 bytes in total from the output data registers) into the specified array
+	*	@Brief	This function sets the sensor settings
 	*
-	*	@Para		byte_array 		[uint8_t*] : the address of the byte array to be read into
-	* @Para		array_length 	[uint8_t]	 : the length of the byte array to be read into
+	* @Para		value [uint16_t] : the value to be written into the register
 	*
-	* @Return NRF_SUCCESS : The operation succeeded
-	*	@Return Propagate the TWI operation errors
+	* @Return NRF_SUCCESS : The TWI operation succeeded
+	* @Return Propagate the TWI operation errors
 	*
 */
-uint8_t sensorReadDataAll(uint8_t * byte_array, const uint8_t array_length);
-
-/** @Func 	Read the Settings in A Specified Internal Register
-	*
-	* @Breif	This function reads out the specified register contents into the byte array
-	*
-	* @Para		byte_array 		[uint8_t*] 		: the address of the byte array to be read into
-	* @Para		array_length 	[uint8_t]	 		: the length of the byte array to be read into
-	* @Para		reg_type			[reg_type_t] 	:	the register selection which should be choosen from the enumerator type reg_type_t
-	*
-	* @Return NRF_SUCCESS : The operation succeeded
-	*	@Return Propagate the TWI operation errors
-	*
-*/
-uint8_t sensorReadRegister(uint8_t * byte_array, const uint8_t array_length, const reg_type_t reg_type);
+uint8_t sensorSetup(const uint16_t value);
 
 /** @Func 	Start Color Sampling
 	*
@@ -265,6 +232,23 @@ uint8_t sensorSampleStart(void);
 */
 uint8_t sensorSleep(void);
 
+/** @Func 	Read Out the Acquired Sensor Data
+	*
+	* @Brief	This function reads out all the sensor data (6 bytes in total from the output data registers) into the specified array
+	*
+	*	@Para		byte_array 		[uint8_t*] : the address of the byte array to be read into
+	* @Para		array_length 	[uint8_t]	 : the length of the byte array to be read into
+	*
+	* @Return NRF_SUCCESS : The operation succeeded
+	*	@Return Propagate the TWI operation errors
+	*
+*/
+uint8_t sensorReadData(uint8_t * byte_array, const uint8_t array_length);
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* Top Layer Functions */
+
 /** @Func 	Sampling From All Three Channels
 	*
 	*	@Brief	This function takes the color sensor data for all three RGB channels
@@ -279,7 +263,50 @@ uint8_t sensorSleep(void);
 uint8_t sensorSampleColor(uint8_t * byte_array, const uint8_t array_length);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
+/* Accessor Functions */
+
+/** @Func 	Get the Address of the Internal TWI Instance
+	*
+	* @Brief 	This function returns the address of the internal defined TWI instance
+	*
+	* @Return	app_twi_t : The TWI instance type
+	*
+*/
+app_twi_t * sensorGetInstance(void);
+
+/** @Func 	Test Whether the Red LED is Currently On
+	*
+	* @Brief 	This function returns the status of the Red LED
+	*
+	* @Return true 	[bool] : The Red LED is on
+	*	@Return	false	[bool] : The Red LED is off
+	*
+*/
+bool sensorIsRedOn(void);
+
+/** @Func 	Test Whether the Green LED is Currently On
+	*
+	* @Brief	This function returns the status of the Green LED
+	*
+	* @Return	true 	[bool] : The Green LED is on
+	* @Return false [bool] : The Green LED is off
+	*
+*/
+bool sensorIsGreenOn(void);
+
+/** @Func 	Test Whether the Blue LED is Currently On
+	*
+	* @Brief	This function returns the status of the Blue LED
+	*
+	* @Return true 	[bool] : The Blue LED is on
+	* @Return	false [bool] : The Blue LED is off	
+	*
+*/
+bool sensorIsBlueOn(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /* C++ Library Header */
 	
 #ifdef __cplusplus

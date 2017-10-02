@@ -93,14 +93,14 @@
 #define BOARD_TICKS_CONVERSION(org_time_ms, org_time_ticks, obj_time_ms, obj_time_ticks) {obj_time_ticks = (float)obj_time_ms/org_time_ms * org_time_ticks;}
 
 /** @Macro Define Sub-procedures for Converting Pin No into Index */
-#define BOARD_PIN_TO_IDX(list,length,pin_no,index) 			{for(uint8_t i = 0; i < length; i++){ \
-																													if (list[i] == pin_no){							\
-																														index = i;												\
-																														break;}}}
+#define BOARD_PIN_TO_IDX(list,length,pin_no,index) {for(uint8_t i = 0; i < length; i++){ 	\
+																											if (list[i] == pin_no){							\
+																												index = i;												\
+																												break;}}}
 
 /** @Macro Define Sub-procedures for Converting Index into Pin No */
-#define BOARD_IDX_TO_PIN(list,length,pin_no,index)      {ASSERT(index<length);\
-																												 pin_no = list[index];}
+#define BOARD_IDX_TO_PIN(list,length,pin_no,index) {ASSERT(index<length); \
+																										pin_no = list[index];}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /** C++ Header */

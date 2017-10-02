@@ -59,6 +59,7 @@
 #include "fds.h"
 #include "peer_manager.h"
 #include "sensorsim.h"
+#include "app_scheduler.h"
 
 /** @Modules Logging Modules */
 #define NRF_LOG_MODULE_NAME "APP"
@@ -73,6 +74,8 @@
 #include "app_storage.h"
 #include "app_uart_comm.h"
 #include "app_adc.h"
+
+//#include "p1234701ct.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -133,6 +136,10 @@
 #define APP_ADV_INTERVAL                														300
 /** @Macro The advertising timeout in units of seconds */
 #define APP_ADV_TIMEOUT_IN_SECONDS      														180
+
+/* Scheduler Parameters */
+#define SCHED_MAX_EVENT_DATA_SIZE																		8
+#define SCHED_QUEUE_SIZE																						16
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

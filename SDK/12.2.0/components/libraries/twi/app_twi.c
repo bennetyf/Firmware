@@ -15,6 +15,8 @@
 #include "nrf_assert.h"
 #include "app_util_platform.h"
 
+#include "nrf_log.h"
+#include "nrf_log_ctrl.h"
 
 // Increase specified queue index and when it goes outside the queue move it
 // on the beginning of the queue.
@@ -119,7 +121,7 @@ static ret_code_t start_transfer(app_twi_t * p_app_twi)
         xfer_desc.secondary_length = 0;
         flags = (p_transfer->flags & APP_TWI_NO_STOP) ? NRF_DRV_TWI_FLAG_TX_NO_STOP : 0;
     }
-
+		
     return nrf_drv_twi_xfer(&p_app_twi->twi, &xfer_desc, flags);
 }
 
@@ -163,7 +165,7 @@ static void start_pending_transaction(app_twi_t * p_app_twi,
             }
         }
         CRITICAL_REGION_EXIT();
-
+				
         if (!start_transaction)
         {
             return;
@@ -171,17 +173,17 @@ static void start_pending_transaction(app_twi_t * p_app_twi,
         else
         {
             ret_code_t result;
-
+					
             // Try to start first transfer for this new transaction.
             p_app_twi->current_transfer_idx = 0;
             result = start_transfer(p_app_twi);
-
+					
             // If it started successfully there is nothing more to do here now.
             if (result == NRF_SUCCESS)
             {
                 return;
             }
-
+						
             // Transfer failed to start - notify user that this transaction
             // cannot be started and try with next one (in next iteration of
             // the loop).
@@ -207,7 +209,7 @@ static void twi_event_handler(nrf_drv_twi_evt_t const * p_event,
     if (p_event->type == NRF_DRV_TWI_EVT_DONE)
     {
         result = NRF_SUCCESS;
-
+			
         // Transfer finished successfully. If there is another one to be
         // performed in the current transaction, start it now.
         // [use a local variable to avoid using two volatile variables in one

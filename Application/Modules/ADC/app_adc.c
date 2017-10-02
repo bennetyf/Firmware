@@ -87,6 +87,8 @@ static void adc_evt_handler(nrf_drv_saadc_evt_t const * event)
 			// Stop the ADC sampling
 			adcSampleStop();
 		}
+		default:
+			break;
 	}
 }
 
@@ -312,8 +314,7 @@ void adcPPIConfig(void)
 {
 	uint8_t err_code;
 	// Initialize the PPI peripheral
-	err_code = nrf_drv_ppi_init();
-	APP_ERROR_CHECK(err_code);
+	nrf_drv_ppi_init();
 	
 	// Allocate a free PPI channel
 	err_code = nrf_drv_ppi_channel_alloc(&adc_ppi_channel);
@@ -343,8 +344,8 @@ void adcSampleStart(void)
 	adc_result_ready = false;
 	
 	// Start the timer
-	nrf_drv_timer_clear(&adc_sa_timer);
 	nrf_drv_timer_enable(&adc_sa_timer);
+	nrf_drv_timer_clear(&adc_sa_timer);
 	
 	// Enable the PPI channel
 	err_code = nrf_drv_ppi_channel_enable(adc_ppi_channel);
